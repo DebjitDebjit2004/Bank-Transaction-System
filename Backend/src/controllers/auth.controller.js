@@ -2,6 +2,7 @@ const userModel = require("../models/auth.model.js");
 const { isValidEmail, isValidPassword, isValidName } = require("../validations/auth.validations.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const tokenBlackListModel = require("../models/blacklist.model.js");
 
 /**
  * Register a new user
@@ -126,6 +127,8 @@ const userLoginController = async (req, res) => {
 
     const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: "1d"});
 
+    res.cookie("token", token)
+
     return res.status(200).json({
         user: {
             id: user._id,
@@ -139,7 +142,38 @@ const userLoginController = async (req, res) => {
     })
 }
 
+/**
+ * Logout a user
+ * - /api/auth/logout
+ */
+const userLogoutController = async (req, res) => {
+    const token = req.cookies?.token || req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+        return res.status(200).json({
+            message: "User logged out successfully",
+            status: "Logged out Successfully",
+            success: true,
+            token: null,
+            user: null,
+        })
+    }
+
+    await tokenBlackListModel.create({token: token});
+
+    res.clearCookie("token");
+
+    res.status(200).json({
+        message: "User logged out successfully",
+        status: "Logged out Successfully",
+        success: true,
+        token: null,
+        user: null,
+    })
+}
+
 module.exports = {
     userRegisterController,
     userLoginController,
+    userLogoutController,
 }
