@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         unique: true,
         lowercase: true,
-        match: {
+        validate: {
             validator: function(value) {
                 return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
             },
@@ -29,25 +29,26 @@ const userSchema = new mongoose.Schema({
         required: [true, "Password is Required for Opening an Account"],
         minlength: [8, "Password must be at least 8 characters long"],
         maxlength: [30, "Password must be at most 30 characters long"],
-        match: {
+        validate: {
             validator: function(value) {
                 return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value);
             },
             message: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
-        }
+        },
+        select: false,
     }
     
 }, {
     timestamps: true,
 })
 
-userSchema.pre("save", async function (next) {
-    if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
 
     const hash = await bcrypt.hash(this.password, 10)
     this.password = hash;
 
-    return next();
+    return;
 })
 
 userSchema.methods.comparePassword = async function (password) {
