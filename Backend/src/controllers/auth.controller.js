@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 
 /**
  * Register a new user
- * - /api/v1/auth/register
+ * - /api/auth/register
  */
 const userRegisterController = async (req, res) => {
     const {email, name, password} = req.body;
@@ -75,7 +75,7 @@ const userRegisterController = async (req, res) => {
 
 /**
  * Login a user
- * - /api/v1/auth/login
+ * - /api/auth/login
  */
 const userLoginController = async (req, res) => {
     const {email, password} = req.body;
