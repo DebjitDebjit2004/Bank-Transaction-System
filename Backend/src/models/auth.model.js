@@ -42,6 +42,10 @@ const userSchema = new mongoose.Schema({
     timestamps: true,
 })
 
+/**
+ * Pre-save middleware to hash the password
+ * before saving the user to the database
+ */
 userSchema.pre("save", async function () {
     if (!this.isModified("password")) return;
 
@@ -51,6 +55,10 @@ userSchema.pre("save", async function () {
     return;
 })
 
+/**
+ * Method to compare the password with the hashed password
+ * used to login a user
+ */
 userSchema.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 }
