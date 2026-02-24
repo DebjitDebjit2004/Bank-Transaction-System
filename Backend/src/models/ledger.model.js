@@ -36,7 +36,12 @@ const ledgerSchema = new mongoose.Schema({
     timestamps: true
 })
 
-const preventLedgerModification = async function() {
+/**
+ * @description Prevent modification of ledger entry
+ * @throws {Error} If the ledger entry is modified
+ * @returns {void}
+ */
+const preventLedgerModification = async() => {
     throw new Error("Cannot modify ledger entry");
 }
 
