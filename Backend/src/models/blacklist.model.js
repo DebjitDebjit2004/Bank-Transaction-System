@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 
+/**
+ * @description Schema to blacklist a token
+ * @field token - The token to blacklist
+ */
 const tokenBlacklistSchema = new mongoose.Schema({
     token: {
         type: String,
