@@ -166,6 +166,10 @@ const crateTransaction = async (req, res) => {
             type: "DEBIT",
         }], { session });
 
+        await (() => {
+            return new Promise((resolve) => setTimeout(resolve, 15 * 1000));
+        })()
+
         const creditLedgerEntry = await ledgerModel.create([{
             account: toAccount,
             amount,
@@ -173,14 +177,14 @@ const crateTransaction = async (req, res) => {
             type: "CREDIT",
         }], { session });
 
-        await transactionModel.findOneAndUpdate({_id: transaction._id}, {status: "COMPLETED"}, {session});
+        const newTransaction = await transactionModel.findOneAndUpdate({_id: transaction._id}, {status: "COMPLETED"}, {session, new: true});
 
         await session.commitTransaction();
         session.endSession();
 
         return res.status(201).json({
             message: "Transaction created successfully",
-            transaction: transaction,
+            transaction: newTransaction,
             ledgerEntries: [debitLedgerEntry, creditLedgerEntry],
             success: true,
             status: "Success",
