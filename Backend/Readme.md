@@ -47,6 +47,8 @@ It supports **user authentication**, **account management**, and **money transfe
 
 ---
 
+## Base URL: https://bank-transaction-system.onrender.com (You can use it in Postman)
+
 ## Authentication APIs (`/api/auth`)
 
 All responses are JSON.
