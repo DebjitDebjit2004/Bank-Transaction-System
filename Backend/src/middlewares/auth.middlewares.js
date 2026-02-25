@@ -16,7 +16,7 @@ const isLoggedIn = async (req, res, next) => {
         });
     }
 
-    const isBlackList = await tokenBlackListModel.findOne({token});
+    const isBlackList = await tokenBlackListModel.findOne({ token });
 
     if (isBlackList) {
         return res.status(401).json({
@@ -40,6 +40,54 @@ const isLoggedIn = async (req, res, next) => {
             error: error.message,
         });
     }
+}
+
+const isSystemUser = async (req, res, next) => {
+
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1]
+
+    if (!token) {
+        return res.status(401).json({
+            message: "Unauthorized Access, Please Login to access this resource",
+            success: false,
+            data: null,
+        })
+    }
+
+    const isBlacklisted = await tokenBlackListModel.findOne({ token })
+
+    if (isBlacklisted) {
+        return res.status(401).json({
+            message: "Unauthorized Access, Please Login to access this resource",
+            success: false,
+            data: null,
+        })
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+
+        const user = await userModel.findById(decoded.userId).select("+systemUser")
+        if (!user.systemUser) {
+            return res.status(403).json({
+                message: "Unauthorized Access, Please Login to access this resource",
+                success: false,
+                data: null,
+            })
+        }
+
+        req.user = user
+
+        return next()
+    }
+    catch (err) {
+        return res.status(401).json({
+            message: "Unauthorized Access, Please Login to access this resource",
+            success: false,
+            data: null,
+        })
+    }
+
 }
 
 module.exports = {

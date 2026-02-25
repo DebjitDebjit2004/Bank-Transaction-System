@@ -36,6 +36,16 @@ const userSchema = new mongoose.Schema({
             message: "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character",
         },
         select: false,
+    },
+
+    /**
+     * @description - This field is used to check if the user is a system user
+     */
+    systemUser: {
+        type: Boolean,
+        default: false,
+        immutable: true,
+        select: false,
     }
     
 }, {
