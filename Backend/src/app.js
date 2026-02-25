@@ -211,6 +211,9 @@ app.get("/", (req, res) => {
   
           <div class="section-title">How to test the APIs</div>
           <p>
+            BASE URL for POSTMAN<span class="chip">https://bank-transaction-system.onrender.com</span> 
+          </p>
+          <p>
             You can test every endpoint using <span class="chip">Postman</span> or any REST client
             (Insomnia, Thunder Client, curl, etc.).
           </p>
