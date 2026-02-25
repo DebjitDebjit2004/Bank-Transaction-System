@@ -9,7 +9,7 @@ const tokenBlackListModel = require("../models/blacklist.model.js");
  * - /api/auth/register
  */
 const userRegisterController = async (req, res) => {
-    const {email, name, password} = req.body;
+    const {email, name, password, systemUser} = req.body;
 
     if (!email || !name || !password) {
         return res.status(400).json({
@@ -57,6 +57,7 @@ const userRegisterController = async (req, res) => {
         email,
         name,
         password,
+        systemUser,
     });
 
     const token = jwt.sign({userId: user._id}, process.env.JWT_SECRET, {expiresIn: "1d"});
@@ -66,6 +67,7 @@ const userRegisterController = async (req, res) => {
             id: user._id,
             email: user.email,
             name: user.name,
+            systemUser: user.systemUser,
         },
         message: "User registered successfully",
         status: "Registered Successfully",

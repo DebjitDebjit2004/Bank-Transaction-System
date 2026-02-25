@@ -9,4 +9,18 @@ const accountController = require("../controllers/account.controller");
  */
 router.post("/create-new", authMiddleware.isLoggedIn, accountController.createAccountController);
 
+/**
+ * @description Get all accounts
+ * @route GET /api/account/get-all
+ * @access Private
+ */
+router.get("/get-all", authMiddleware.isLoggedIn, accountController.getAllAccountsController);
+
+/**
+ * @description Get bank balance of an account
+ * @route GET /api/account/get-bank-balance/:accountId
+ * @access Private
+ */
+router.get("/get-bank-balance/:accountId", authMiddleware.isLoggedIn, accountController.getAccountBankBalanceController);
+
 module.exports = router;

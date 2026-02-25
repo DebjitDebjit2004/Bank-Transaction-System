@@ -91,5 +91,6 @@ const isSystemUser = async (req, res, next) => {
 }
 
 module.exports = {
-    isLoggedIn
+    isLoggedIn,
+    isSystemUser,
 }
